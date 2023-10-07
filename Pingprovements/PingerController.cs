@@ -70,11 +70,19 @@ namespace Pingprovements
             if (newPingInfo.origin == Vector3.zero)
                 return;
 
-            // If the targeted game object already has a ping, don't do anything
-            // This is here to avoid stacking of different player pings on interactables
-            if (newPingInfo.targetGameObject != null &&
-                _pingIndicators.Any(indicator => indicator && indicator.pingTarget == newPingInfo.targetGameObject))
-                return;
+            // If the targeted game object already has a ping, destroy old ping and stop there
+            if (newPingInfo.targetGameObject != null) {
+                var targetPingIndicator = _pingIndicators.SingleOrDefault(indicator => indicator && indicator.pingTarget == newPingInfo.targetGameObject);
+                Debug.Log(targetPingIndicator);
+                if (targetPingIndicator != null) {
+                    Object.Destroy(targetPingIndicator.gameObject);
+
+                    if (self.hasAuthority) {
+                        self.CallCmdPing(newPingInfo);
+                    }
+                    return;
+                }
+            }
 
             self.NetworkcurrentPing = newPingInfo;
 
@@ -130,6 +138,13 @@ namespace Pingprovements
             }
 
             pingIndicator.SetObjectValue("fixedTimer", fixedTimer);
+        }
+
+        public void AttemptPing(On.RoR2.PingerController.orig_AttemptPing orig, RoR2.PingerController self, Ray aimRay, GameObject bodyObject) {
+            // HACK: Empty ping so we can ping the same object multiple times in a row
+            self.currentPing = RoR2.PingerController.emptyPing;
+            
+            orig(self, aimRay, bodyObject);
         }
     }
 }

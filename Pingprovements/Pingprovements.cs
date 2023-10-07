@@ -30,6 +30,7 @@ namespace Pingprovements
             PingerController pingerController = new PingerController(this);
 
             On.RoR2.PingerController.SetCurrentPing += pingerController.SetCurrentPing;
+            On.RoR2.PingerController.AttemptPing += pingerController.AttemptPing;
 
             On.RoR2.UI.PingIndicator.Update += pingIndicator.Update;
 
