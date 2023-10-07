@@ -64,6 +64,8 @@ namespace Pingprovements
         public void SetCurrentPing(On.RoR2.PingerController.orig_SetCurrentPing orig,
             RoR2.PingerController self, RoR2.PingerController.PingInfo newPingInfo)
         {
+            self.pingStock = 99;
+
             // For some reason, if you ping somewhere that is not pingable, it will create a
             // Ping at 0,0,0. If that happens, we just leave, since that isn't possible in the
             // regular game either, or if so, not at exactly those coordinates
