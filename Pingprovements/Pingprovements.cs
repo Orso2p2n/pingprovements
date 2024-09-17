@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 namespace Pingprovements
 {
-    [BepInDependency("com.bepis.r2api")]
     [BepInPlugin("com.pixeldesu.pingprovements", "Pingprovements", "1.7.0")]
     public class Pingprovements : BaseUnityPlugin
     {

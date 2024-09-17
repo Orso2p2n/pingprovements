@@ -35,9 +35,11 @@ namespace Pingprovements
         private void BuildNotification(PickupIndex pickupIndex, RoR2.UI.PingIndicator pingIndicator)
         {
             LocalUser localUser = LocalUserManager.GetFirstLocalUser();
+            CharacterMaster characterMaster = pingIndicator.pingOwner.GetComponent<CharacterMaster>();
+            CharacterMasterNotificationQueue notificationQueueForMaster = CharacterMasterNotificationQueue.GetNotificationQueueForMaster(characterMaster);
 
             if (localUser.currentNetworkUser.userName ==
-                Util.GetBestMasterName(pingIndicator.pingOwner.GetComponent<CharacterMaster>()))
+                Util.GetBestMasterName(characterMaster))
             {
                 if (localUser.userProfile.HasDiscoveredPickup(pickupIndex))
                 {
@@ -47,25 +49,18 @@ namespace Pingprovements
                     EquipmentDef equip = EquipmentCatalog.GetEquipmentDef(pickup.equipmentIndex);
                     ArtifactDef artifact = ArtifactCatalog.GetArtifactDef(pickup.artifactIndex);
 
-                    GenericNotification notification = Object
-                        .Instantiate(Resources.Load<GameObject>("Prefabs/NotificationPanel2"))
-                        .GetComponent<GenericNotification>();
-
                     if (item != null)
                     {
-                        notification.SetItem(item);
+                        notificationQueueForMaster.PushNotification(new CharacterMasterNotificationQueue.NotificationInfo(item), 6f);
                     }
                     else if (equip != null)
                     {
-                        notification.SetEquipment(equip);
+                        notificationQueueForMaster.PushNotification(new CharacterMasterNotificationQueue.NotificationInfo(equip), 6f);
                     }
                     else if (artifact != null)
                     {
-                        notification.SetArtifact(artifact);
+                        notificationQueueForMaster.PushNotification(new CharacterMasterNotificationQueue.NotificationInfo(artifact), 6f);
                     }
-
-                    notification.transform.SetParent(RoR2Application.instance.mainCanvas.transform, false);
-                    notification.transform.position = new Vector3(notification.transform.position.x + 2, 95, 0);
                 }
             }
         }

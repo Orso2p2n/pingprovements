@@ -80,7 +80,8 @@ namespace Pingprovements
 
             // Here we create an instance of PingIndicator
             // since we're not jumping into PingerController.RebuildPing() to create one.
-            GameObject go = (GameObject) Object.Instantiate(Resources.Load("Prefabs/PingIndicator"));
+            GameObject go = (GameObject) Object.Instantiate(LegacyResourcesAPI.Load<GameObject>("Prefabs/PingIndicator"));
+            
             RoR2.UI.PingIndicator pingIndicator = go.GetComponent<RoR2.UI.PingIndicator>();
 
             pingIndicator.pingOwner = self.gameObject;
